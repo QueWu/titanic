@@ -27,46 +27,35 @@ def custom_dump_svmlight_file(X,y,scaled_file):
             f.write(str(y[ind]) + " " \
             + "".join([x for x in itertools.chain.from_iterable(zip(featinds,map(str,row))) if x]) + "\n")
 
-def grid_lib():
-    train_test_list = joblib.load("train_test_l.pkl")
-    #scale_data( scaler.transform(
-    clfX = scale_data(train_test_list[0])
-    clfTrue = train_test_list[1]
-
-    scaler = joblib.load("scaler_lrc.pkl")
-    clfTestX = scaler.transform(train_test_list[2])
-    clfTestTrue = train_test_list[3]
-
-    custom_dump_svmlight_file(clfX, clfTrue, "train_test_l_lib")
-
 def train():
     label_mass = ex.extraction('train.csv')
     y = label_mass[0]
     X = label_mass[1]
     #print(y); print(X)
-    #X_scaled = scale_data(X)
+    X_scaled = scale_data(X)
     #print(np.array(X).shape)
-    custom_dump_svmlight_file(X, y, "libsvm_train_file2")
+    custom_dump_svmlight_file(X_scaled, y, "libsvm_train_file3")
 
-    clf = SVC(C=2,gamma=0.125)
+    clf = SVC(C=1,gamma=0.125)
     #clf = SVC(gamma=0.125)
     #clf = SVC(C=2097152, gamma=0.00006103515625)
-    clf.fit(X,y)
+    #clf = SVC()
+    clf.fit(X_scaled,y)
     print (clf.get_params)
-    joblib.dump(clf, 'round3_slim_model.pkl')
+    joblib.dump(clf, 'round4_slim_model.pkl')
 
 def test():
-    clf = joblib.load('round3_slim_model.pkl')
+    clf = joblib.load('round4_slim_model.pkl')
     label_mass = ex.extraction('test.csv')
 
-    #scaler = joblib.load('scaler_file_stand.pkl')
+    scaler = joblib.load('scaler_file_stand.pkl')
 
     y = label_mass[0]
     X = label_mass[1]
     #print(np.array(X).shape)
 
-    #X_scaled = scaler.transform(X)
-    preArr = clf.predict(X)
+    X_scaled = scaler.transform(X)
+    preArr = clf.predict(X_scaled)
 
     print("Accuracy score: ", accuracy_score(y, preArr)*100,"%\n")
     print("precision scores")

@@ -3,9 +3,9 @@ import numpy as np
 
 def patches(inFrame):
     #mean age to fill nan
-    avg = int(sum(inFrame['Age'].fillna(0).tolist())/int(inFrame['Age'].count())*100)/100
+    #avg = int(sum(inFrame['Age'].fillna(0).tolist())/int(inFrame['Age'].count())*100)/100
     #avg = int(sum(inFrame['Age'].fillna(0).tolist())//int(inFrame['Age'].count()))
-    inFrame['Age'] = inFrame['Age'].fillna(avg)
+    inFrame['Age'] = inFrame['Age'].fillna(29.88)
     #male->0 female->1
     inFrame['Sex'] = inFrame['Sex'].replace('male',0)
     inFrame['Sex'] = inFrame['Sex'].replace('female',1)
